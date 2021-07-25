@@ -26,52 +26,52 @@ int main() {
             users_choice_int = print_signin_message(); // Call print_signin_message to display the signed-in menu. Return choice to users_choice_int.
 
             switch(users_choice_int) {
-                case 1: {
-                    create_account();
+                case 1: {  // IF the user chose option 1 from the signed in menu,
+                    create_account(); // Call create_account() function.
                     break;
                 }
-                case 2: {
-                    print_current_users();
+                case 2: {  // IF the user chose option 2 from the signed in menu,
+                    print_current_users(); // Call print_current_users() function.
                     break;
                 }
-                case 3: {
-                    //delete_account();
+                case 3: {  // IF the user chose option 3 from the signed in menu,
+                    delete_account(); // delete_account() function.
                     break;
                 }
-                case 4: {
-                    signout_account();
+                case 4: {  // IF the user chose option 4 from the signed in menu,
+                    signout_account(); // Call signout_account() function.
                     break;
                 }
-                case 5: {
-                    abort();
+                case 5: {  // IF the user chose option 5 from the signed in menu,
+                    abort(); // Exit the program.
                 }
                 break;
-            }
+            } // End switch.
         }
         else {
             switch(users_choice_int) {
-                case 1: {
-                    create_account();
+                case 1: { // IF the user chose option 1 from the welcome menu,
+                    create_account(); // Call create_account() function.
                     break;
                 }
-                case 2: {
-                    signin_account();
+                case 2: { // IF the user chose option 2 from the welcome menu,
+                    signin_account(); // Call signin_account() function.
                     break;
                 }
-                case 3: {
-                    abort();
+                case 3: { // IF the user chose option 3 from the welcome menu,
+                    abort(); // Exit the program.
                 }
                 break;
-            }
-            if(!signed_in) {
-                users_choice_int = print_welcome_message();
+            } // End switch.
+            if(!signed_in) { // Only if the user is not signed in, we display the welcome menu.
+                users_choice_int = print_welcome_message();  // Call print_welcome_message to display the signed-in menu. Return choice to users_choice_int.
             }
             
         }
-    }
+    } // End while loop.
 
     return 0;
-}
+} // End main.
 
 int print_welcome_message() {
     int list_menu_start = 1, list_menu_last = 3;
@@ -129,58 +129,58 @@ void create_account() {
     string username, password, // username holds the inputted username, passwords holds the inputted password.
     readFromFile, newUserString = "=User="; // readFromFile parses through the data file, newUserString holds the identifier for a new user.
 
-    ofstream accountsInfoWrite ("accounts_info.txt", ios_base::app);
-    ifstream accountsInfoRead ("accounts_info.txt");
+    ofstream accountsInfoWrite ("accounts_info.txt", ios_base::app); // Write to 'accounts_info.txt'.
+    ifstream accountsInfoRead ("accounts_info.txt"); // Read from 'accounts_info.txt'.
 
     cout << "\n\nCreate a New Account\n";
     cout << "=-==============================-=\n\n";
     cout << "Enter a Username here: ";
 
-    getline(cin, username);
+    getline(cin, username); // User input.
 
     cout << "Enter a Password here: ";
 
-    getline(cin, password);
+    getline(cin, password); // User input.
 
     cout << "\nA new account has been succesfully created with the following information\n";
     cout << "Username: " << username << endl;
-    cout << "Password: " << password;
+    cout << "Password: " << password; // Display the account credentials the user created an account with.
 
-    if(accountsInfoWrite.is_open()) {
-        accountsInfoWrite << newUserString << endl;
-        accountsInfoWrite << "#" << count_users() << endl;
-        accountsInfoWrite << username << endl;
-        accountsInfoWrite << password << "\n\n";
-        accountsInfoWrite.close();
+    if(accountsInfoWrite.is_open()) { // Validate 'accounts_info.txt' opens correctly.
+        accountsInfoWrite << newUserString << endl; // Write new iser identifier to 'accounts_info.txt' first.
+        accountsInfoWrite << "#" << count_users() << endl; // Write the user # in 'accounts_info.txt'.
+        accountsInfoWrite << username << endl; // Write the username to 'accounts_info.txt'.
+        accountsInfoWrite << password << "\n\n"; // Write the password to 'accounts_info.txt'.
+        accountsInfoWrite.close(); // Close the open 'accounts_info.txt' file.
     }
-    else cout << "There was an error opening 'accounts_info.txt'. Please ensure this file exists and then restart the program.\n";
+    else cout << "There was an error opening 'accounts_info.txt'. Please ensure this file exists and then restart the program.\n"; // Provide input validation feedback.
 }
 
 void signin_account() {
-    string username, password, readFromFile;
+    string username, password, readFromFile; // username, stores inputted username. password, stores inoutted password. readFromFile, temp string to read file.
 
-    ifstream accountsInfoRead ("accounts_info.txt");
+    ifstream accountsInfoRead ("accounts_info.txt"); // Read from 'accounts_info.txt'.
 
     cout << "\n\nSign-in to an existing account\n";
     cout << "=-==============================-=\n\n";
     cout << "Enter Username: ";
 
-    getline(cin, username);
+    getline(cin, username); // User input.
 
-    while(username.compare("1") != 0) {
-        while(accountsInfoRead >> readFromFile) {
-            if(readFromFile.compare(username) == 0) {
+    while(username.compare("1") != 0) { // If the user wants to exit the signin menu, they may enter '1' to do so.
+        while(accountsInfoRead >> readFromFile) { // Read through the entire 'accounts_info.txt' file.
+            if(readFromFile.compare(username) == 0) { // Check if the entered username exists within 'accounts_info.txt'.
                 cout << "Enter Password: ";
-                getline(cin, password);
-                accountsInfoRead >> readFromFile;
-                while(readFromFile.compare(password) != 0) {
+                getline(cin, password); // User input.
+                accountsInfoRead >> readFromFile; // Read the next line of the file where the password exists.
+                while(readFromFile.compare(password) != 0) { // Check if the password entered matches with the password in 'accounts_info.txt'.
                         cout << "Password entered was incorrect.\n";
                         cout << "Enter password here: ";
-
-                        getline(cin, password);
+                            // IF the password does not match, user input for another password so the user can re-attempt the login.
+                        getline(cin, password); // IF the user choses to leave the log-in prompt, they may enter '1'.
                 }
-                signed_in = true;
-                current_signed_in_username = username;
+                signed_in = true; // IF the user succesfully signs in, set global 'signed_in' bool to true.
+                current_signed_in_username = username; // IF the user succesfully signs in set global 'current_signed_in_username'.
                 cout << "\nSuccesfully signed into account!\n";
                 return;
             }
@@ -188,75 +188,80 @@ void signin_account() {
 
         cout << "User was not found!\n";
         cout << "To create a new account enter '1'.\n";
-        cout << "Enter Username: ";
+        cout << "Enter Username: "; // Prompt the user to enter another username.
 
-        accountsInfoRead.clear();
-        accountsInfoRead.seekg(0);
-
-        getline(cin, username);
+        accountsInfoRead.clear(); // In case of reading past EOF, clear ifsteam buffer.
+        accountsInfoRead.seekg(0); // We've gone through the entire file already, so seek back to the beginning of the file to look for another username.
+            // User input.
+        getline(cin, username);  // IF the user choses to leave the log-in prompt, they may enter '1'.
     }
+    return;
 }
 
 void print_current_users() {
-    string readFromFile, newUserString = "=User=";
-    ifstream accountsInfoRead ("accounts_info.txt");
+    string readFromFile, newUserString = "=User="; // readFromFile temp string to read file. newUserString, holds the identifier for a new user.
 
-    cout << "\n\nNumber of current users in the system: " << count_users() << "\n";
+    ifstream accountsInfoRead ("accounts_info.txt"); // Read from 'accounts_info.txt'.
+
+    cout << "\n\nNumber of current users in the system: " << count_users() << "\n"; // Display the # of users currently in 'accounts_info.txt'.
     cout << "=-====================================-=\n";
 
-    while(accountsInfoRead >> readFromFile) {
-        if(readFromFile.compare(newUserString) != 0) {
-            if(readFromFile[0] != '#') {
-             cout << readFromFile;
-             accountsInfoRead >> readFromFile;
+    while(accountsInfoRead >> readFromFile) { // Read through the entire 'accounts_info.txt' file.
+        if(readFromFile.compare(newUserString) != 0) { // Check if the line we're on in 'accounts_info.txt' is a newUserString indentifier.
+            if(readFromFile[0] != '#') { // Check we don't display the users number.
+             cout << readFromFile; // Display each username in the 'accounts_info.txt' file.
+             accountsInfoRead >> readFromFile; // Read the next line right away as it contains the password.
             }
         }
         else cout << "\n";
     }
-    cout << "\n\n";
 }
 
 int count_users() {
-    int num_users = 0;
+    int num_users = 0; // Initialize 'num_users' = 0 to count the users in the 'accounts_info.txt' file.
 
-    string readFromFile, newUserString = "=User=";
-    ifstream accountsInfoRead ("accounts_info.txt");
+    string readFromFile, newUserString = "=User="; // readFromFile temp string to read file. newUserString, holds the identifier for a new user.
+    ifstream accountsInfoRead ("accounts_info.txt"); // Read from 'accounts_info.txt'.
 
-    while(accountsInfoRead >> readFromFile) {
-        if(readFromFile.compare(newUserString) == 0) {
-            num_users++;
+    while(accountsInfoRead >> readFromFile) { // Read through the entire 'accounts_info.txt' file.
+        if(readFromFile.compare(newUserString) == 0) { // Check for everytime we come across a new user indentifier.
+            num_users++; // Increment num_users by 1 each time we find a user in 'accounts_info.txt'.
         }
     }
-    return num_users;
+    return num_users; // Return final count stored in num_users.
 }
 
 void signout_account() {
-    string choice;
+    string choice; // String choice, holds the user inputted choice to signout or not.
 
-    if(signed_in) {
+    if(signed_in) { // Check to make sure the user is actually signed into an account.
         cout << current_signed_in_username << ", are you sure you want to sign-out of your account?\n";
         cout << "(Y = yes / N = no)\n";
-        cout << "Enter here: ";
+        cout << "Enter here: "; // Confirm the user actually wants to sign out of their account.
 
-        getline(cin, choice);
+        getline(cin, choice); // User input.
 
-        while(1) {
+        while(1) { // Loop until the user says no, or they succesfully sign out.
             if(choice == "Y" || choice == "y") {
-                signed_in = false;
-                current_signed_in_username = "";
-                cout << "\nSuccesfully signed out of your account!\n";
+                signed_in = false; // IF the user choses to sign out, update global 'signed_in' bool to false.
+                current_signed_in_username = ""; // IF the user choses to sign out, update global 'current_signed_in_username' to "".
+                cout << "\nSuccesfully signed out of your account!\n"; // Confirmation for the user.
                 break;
             }
-            else if(choice == "N" || choice == "n") {
+            else if(choice == "N" || choice == "n") { // IF the user choses not to sign out of their account.
                 cout << "Returning to main menu...\n";
                 break;
             }
             else {
                 cout << "Invalid input! Acceptable inputs are ('Y' = yes / 'N' = no)\n";
-                cout << "Enter here: ";
+                cout << "Enter here: "; // Input validation for (Y, y, N, n).
 
-                getline(cin, choice);
+                getline(cin, choice); // User input.
             }
         }
     }
+}
+
+void delete_account() {
+    
 }
