@@ -8,23 +8,3 @@ Doohan
 Robin
 Besch
 
-=User=
-#3
-Test
-Dummy
-
-=User=
-#4
-Test
-Dummy
-
-=User=
-#5
-Jimmerz
-Password
-
-=User=
-#6
-Tester
-Dumb
-
