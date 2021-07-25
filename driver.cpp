@@ -4,12 +4,15 @@
 
 using namespace std;
 
+bool signed_in = false;
+
 int print_welcome_message(); // Prints welcome menu selections returns users choice.
 int print_signin_message(); // Prints signed-in menu selections returns users choice.
 void create_account(); // Sets up new username and password and stores data into 'accounts_info.txt'.
 void signin_account(); // Allows user to signin an existing account, parses 'accounts_info.txt' and validates password.
 void print_current_users(); // Print a list of active current users in 'accounts_info.txt'.
 int count_users(); // Returns the current number of users in 'accounts_info.txt'.
+void delete_account(); // Deletes the account of a user who is signed in, will permanently delete the user from the system.
 
 int main() {
     int users_choice_int; // int to hold which option the user selects from the main menu.
@@ -17,31 +20,83 @@ int main() {
     users_choice_int = print_welcome_message(); // Print menu for the user, return which option they chose to users_choice_int.
 
     while(1) {
-        switch(users_choice_int) {
-            case 1: {
-                create_account();
+        if(signed_in) {
+            users_choice_int = print_signin_message();
+
+            switch(users_choice_int) {
+                case 1: {
+                    create_account();
+                    break;
+                }
+                case 2: {
+                    signin_account();
+                    break;
+                }
+                case 3: {
+                    print_current_users();
+                    break;
+                }
+                case 4: {
+                    //delete_account();
+                }
+                case 5: {
+                    abort();
+                }
                 break;
             }
-            case 2: {
-                signin_account();
-                break;
-            }
-            case 3: {
-                print_current_users();
-                break;
-            }
-            case 4: {
-                abort();
-            }
-            break;
+
+            
         }
-        users_choice_int = print_welcome_message();
+        else {
+            switch(users_choice_int) {
+                case 1: {
+                    create_account();
+                    break;
+                }
+                case 2: {
+                    signin_account();
+                    break;
+                }
+                case 3: {
+                    abort();
+                }
+                break;
+            }
+
+            
+        }
     }
 
     return 0;
 }
 
 int print_welcome_message() {
+    int list_menu_start = 1, list_menu_last = 3;
+    string users_choice; // Holds which choice the user selects from the list.
+
+    cout << "Demo Account Creation Software\n";
+    cout << "=-==============================-=\n\n";
+    cout << "1.) Create a New Account\n";
+    cout << "2.) Sign-in to an Existing Account\n";
+    cout << "3.) Exit\n";
+    cout << "Enter here: ";
+
+    getline(cin, users_choice); // User input.
+    int users_choice_int = stoi(users_choice); // Convert the users option from a string to an integer value.
+
+    while(users_choice_int > list_menu_last || users_choice_int < list_menu_start) { // Input validation check.
+        cout << "You have entered an invalid input. Accepted inputs are '1' through '3'. Please enter only accepted inputs to proceed.\n";
+        cout << "Enter here: ";
+        
+        getline(cin, users_choice); // User input.
+        users_choice_int = stoi(users_choice); // Convert the users option from a string to an integer value.
+    }
+
+    return users_choice_int;
+}
+
+int print_signin_message() {
+    int list_menu_start = 1, list_menu_last = 5;
     string users_choice; // Holds which choice the user selects from the list.
 
     cout << "Demo Account Creation Software\n";
@@ -49,47 +104,21 @@ int print_welcome_message() {
     cout << "1.) Create a New Account\n";
     cout << "2.) Sign-in to an Existing Account\n";
     cout << "3.) List current users\n";
-    cout << "4.) Exit\n";
+    cout << "4.) Delete Account\n";
+    cout << "5.) Exit\n";
     cout << "Enter here: ";
 
     getline(cin, users_choice); // User input.
     int users_choice_int = stoi(users_choice); // Convert the users option from a string to an integer value.
 
-    cout << users_choice_int;
-
-    while(users_choice_int > 4 || users_choice_int < 1) { // Input validation check.
-        cout << "You have entered an invalid input. Accepted inputs are '1' or '2' or '3'. Please enter only accepted inputs to proceed.\n";
+    while(users_choice_int > list_menu_last || users_choice_int < list_menu_start) { // Input validation check.
+        cout << "You have entered an invalid input. Accepted inputs are '1' through '4'. Please enter only accepted inputs to proceed.\n";
         cout << "Enter here: ";
         
         getline(cin, users_choice); // User input.
         users_choice_int = stoi(users_choice); // Convert the users option from a string to an integer value.
     }
 
-    
-    return users_choice_int;
-}
-
-int print_signin_message() {
-    string users_choice; // Holds which choice the user selects from the list.
-
-    cout << "\n\nDemo Account Creation Software\n";
-    cout << "=-==============================-=\n\n";
-    cout << "1.) Create a New Account\n";
-    cout << "2.) Sign-in to an Existing Account\n";
-    cout << "3.) List current users\n";
-    cout << "4.) Exit\n";
-    cout << "Enter here: ";
-
-    getline(cin, users_choice); // User input.
-
-    while(users_choice != "1" && users_choice != "2" && users_choice != "3" && users_choice != "4") { // Input validation check.
-        cout << "You have entered an invalid input. Accepted inputs are '1' or '2' or '3'. Please enter only accepted inputs to proceed.\n";
-        cout << "Enter here: ";
-        
-        getline(cin, users_choice); // User input.
-    }
-
-    int users_choice_int = stoi(users_choice); // Convert the users option from a string to an integer value.
     return users_choice_int;
 }
 
@@ -147,6 +176,7 @@ void signin_account() {
 
                         getline(cin, password);
                 }
+                signed_in = true;
                 cout << "Succesfully signed into account!\n";
                 return;
             }
@@ -180,6 +210,7 @@ void print_current_users() {
         }
         else cout << "\n";
     }
+    cout << "\n\n";
 }
 
 int count_users() {
